@@ -69,6 +69,7 @@ with conn:
                 # TODO:if Roleta
         else:
            listenMode()
+           #TODO : on Listen ModE
 
 
 
