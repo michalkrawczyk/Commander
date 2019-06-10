@@ -61,17 +61,3 @@ def newRGBLamp(deviceID):
 def newBlinds(deviceID):
     return Identifier(True, Group.BLINDS, deviceID)
 
-# def main():
-#     a = Identifier(True, 31, 255)
-#     print("done")
-#     b = Identifier.fromIdentifierFrame(0b1011111011111111)
-#     c = Identifier(True, 62, 511)
-#     print(a)
-#     print(b)
-#     print(c)
-#     print(bin(a.numericView()))
-#     print(bin(b.numericView()))
-#     print(bin(c.numericView()))
-#
-#
-# main()

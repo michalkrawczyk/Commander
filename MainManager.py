@@ -66,7 +66,10 @@ with conn:
                     msg = pack('>HBBB', dev.numericView(), data.red, data.blue, data.green)
                     radio.write(msg)
                     time.sleep(0.1)
-
                 # TODO:if Roleta
+        else:
+           listenMode()
+
+
 
 

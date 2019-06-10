@@ -1,7 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 from DatabaseConnection.dbParams import *
-# from struct import *
+from NRF24L01.IdentifierFrame import Group
 
 def create_connection(db_file):
     try:
@@ -17,20 +17,19 @@ def getLastCurrentData(conn):
 
     return CurrentData(rows[1], rows[2], rows[3], rows[4], rows[5], rows[6])
 
+#def getLastSensor(conn,group: Group):
+
+#def updateSensors(conn,deviceID,date,measure):
+
 # TODO: ErrorLOG
 
-# def main():
-#     database = 'H:\\PycharmProjects\\Projekt_Zespolowy\\db.sqlite3'
-#     conn = create_connection(database)
-#     with conn:
-#         a = getLastCurrentData(conn)
-#         print(a)
-#         bytes = (2041).to_bytes(2, 'little')
-#         p=0
-#         p=pack('bbb', *fun())
-#
-#         print(p)
-# main()
+
+# database = 'H:\\PycharmProjects\\Projekt_Zespolowy\\db.sqlite3'
+# conn = create_connection(database)
+# with conn:
+#     a = getLastSensor()
+#     print(a)
+
 
 
 
