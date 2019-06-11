@@ -5,7 +5,7 @@ import time
 import struct
 
 # TODO: change database address
-database = 'H:\\PycharmProjects\\Projekt_Zespolowy\\db.sqlite3'
+database = 'H:\\PycharmProjects\\Projekt\\db.sqlite3'
 
 pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
 

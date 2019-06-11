@@ -1,5 +1,6 @@
 from NRF24L01.nrf24 import NRF24
 import time
+import struct
 
 pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
 
@@ -33,11 +34,16 @@ def listenMode():
 
     while True:
         listenMode()
+        print("Listen Mode")
         recv_buffer = []
         pipe = [0]
         if radio.available(pipe, True):
             radio.read(recv_buffer)
+            values = struct.unpack_from('HBBB',recv_buffer)
+            print(values)
         else:
             writeMode()
-            radio.write('\x02\x84\xff\xff\xfb')
+            print("Write Mode")
+            msg = struct.pack('HBBB', 3000, 243, 234, 254)
+            radio.write(msg)
             time.sleep(0.2)

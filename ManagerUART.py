@@ -5,7 +5,7 @@ import time
 import struct
 
 # TODO: change database address
-database = 'H:\\PycharmProjects\\Projekt_Zespolowy\\db.sqlite3'
+database = 'H:\\PycharmProjects\\Projekt\\db.sqlite3'
 
 port = serial.Serial("/dev/ttyS0", baudrate=115200, timeout=3.0)
 
