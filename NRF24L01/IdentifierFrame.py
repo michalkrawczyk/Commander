@@ -55,9 +55,12 @@ class Identifier:
 
 
 def newRGBLamp(deviceID):
-    return Identifier(True,Group.RGB_LAMPS,deviceID)
+    return Identifier(True,Group.RGB_LAMPS, deviceID)
 
 
 def newBlinds(deviceID):
     return Identifier(True, Group.BLINDS, deviceID)
 
+
+def newTempSensor(deviceID):
+    return Identifier(False, Group.TEMPERATURE_SENSORS, deviceID)

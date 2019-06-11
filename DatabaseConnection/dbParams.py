@@ -1,7 +1,7 @@
 class CurrentData:
-    def __init__(self, red, green, blue, temperature, shutterState, manualControl):
+    def __init__(self, red, green, blue, temperature, shutterPosition, manualControl):
         self.manualControl = manualControl
-        self.shutterState = shutterState
+        self.shutterPosition = shutterPosition
         self.temperature = temperature
         self.blue = blue
         self.green = green

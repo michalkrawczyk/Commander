@@ -2,16 +2,17 @@ from NRF24L01.nrf24 import NRF24
 from DatabaseConnection.dbConn import *
 from NRF24L01.commandGenerator import *
 import time
+import struct
 
-#TODO: co z roleta?
+# TODO: change database address
 database = 'H:\\PycharmProjects\\Projekt_Zespolowy\\db.sqlite3'
 
 pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
 
 radio = NRF24()
-radio.begin(1, 0, "P8_23", "P8_24") #Set CE and IRQ pins
+radio.begin(1, 0, "P8_23", "P8_24")  # Set CE and IRQ pins
 radio.setRetries(15, 15)
-radio.setPayloadSize(5)
+# radio.setPayloadSize(7)
 radio.setChannel(0x60)
 
 radio.setDataRate(NRF24.BR_250KBPS)
@@ -53,7 +54,9 @@ devicesOut = [
     newRGBLamp(2),
     newBlinds(3)
 ]
-
+devicesIn = [
+    newTempSensor(4)
+]
 
 conn = create_connection(database)
 with conn:
@@ -61,16 +64,35 @@ with conn:
         data = getLastCurrentData(conn)
 
         if data.manualControl:
+            print("Data taken from Database")
             for dev in devicesOut:
                 if dev.group == Group.RGB_LAMPS:
                     msg = pack('>HBBB', dev.numericView(), data.red, data.blue, data.green)
                     radio.write(msg)
-                    time.sleep(0.1)
-                # TODO:if Roleta
+                elif dev.group == Group.BLINDS:
+                    msg = pack('>HBBB', dev.numericView(), data.red, data.blue, data.green)
+                    radio.write(msg)
+                time.sleep(0.1)
         else:
-           listenMode()
-           #TODO : on Listen ModE
+            print("Data taken from Sensors")
+            listenMode()
+            pipe = [0]
+            if radio.available(pipe, True):
+                recv_buffer = []
+                radio.read(recv_buffer, 7)  # TODO : Zabezpieczenie? Sprawdzic ile bajtow przyjdzie
 
+                if recv_buffer:
+                    msg = struct.unpack_from('HfB', recv_buffer) # Insert into sensors
 
+                    if msg[0] == devicesIn[0]: # Change in future
+                        temperature = msg[1]
+                    else:  # ciii
+                        temperature = 20  # Default
 
+                    writeMode()
 
+                    for dev in devicesOut:
+                        if dev.group == Group.RGB_LAMPS or dev.group == Group.BLINDS:
+                            msg = commandBytes(dev.deviceID, dev.group, temperature)
+                            radio.write(msg)
+                        time.sleep(0.1)
