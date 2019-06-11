@@ -32,6 +32,7 @@ def listenMode():
 
     radio.startListening()
 
+    i = 0
     while True:
         listenMode()
         print("Listen Mode")
@@ -47,3 +48,6 @@ def listenMode():
             msg = struct.pack('HBBB', 3000, 243, 234, 254)
             radio.write(msg)
             time.sleep(0.2)
+        i = +1
+        if i == 4:
+            exit()
