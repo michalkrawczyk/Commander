@@ -48,8 +48,8 @@ while True:
     #else:
     writeMode()
     print("Write Mode")
-    msg = struct.pack('HBBB', 3000, 243, 234, 254)
-    msg=0x09
+    # msg = struct.pack('HBBB', 3000, 243, 234, 254)
+    msg= 0x09
     input()
     a=radio.write(msg)
     print(a)
