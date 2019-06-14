@@ -179,8 +179,8 @@ class NRF24:
     def __init__(self, major=None, minor=None, ce_pin=None, irq_pin=None):
         self.ce_pin = "P9_15"
         self.irq_pin = "P9_16"
-        self.channel = 76
-        self.data_rate = NRF24.BR_1MBPS
+        self.channel = 0x02
+        self.data_rate = NRF24.BR_2MBPS
         self.data_rate_bits = 1000
         self.p_variant = False  # False for RF24L01 and true for RF24L01P
         self.payload_size = 5  # *< Fixed size of payloads
@@ -229,8 +229,12 @@ class NRF24:
         self.irq_pin = irq_pin
 
         if self.ce_pin is not None:
+            a=type(self.ce_pin).__name__
+            b=type(GPIO.OUT).__name__
+            with open("dsf.txt",'w') as file:
+                file.write(a)
+                file.write(a+'\n'+b)
             GPIO.setup(self.ce_pin, GPIO.OUT)
-
         GPIO.setup(self.irq_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         time.sleep(5 / 1000000.0)
