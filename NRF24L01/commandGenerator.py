@@ -78,7 +78,7 @@ def calculateBlindsPosition(temperature, cloudness , illuminance):
         position = 50
 
     if illuminance > 2000:
-        position = position + 20
+        position = (position + 20) % 100
 
     result = [int(manual), position, 0]
     return result
