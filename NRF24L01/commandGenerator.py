@@ -3,7 +3,7 @@ from NRF24L01.IdentifierFrame import *
 from struct import *
 
 
-def calculateRGB(temperature):
+def calculateRGB(temperature, illuminance):
     now = datetime.now()
     am11 = now.replace(hour=11, minute=0, second=0, microsecond=0)
     am9 = now.replace(hour=9, minute=0, second=0, microsecond=0)
@@ -11,7 +11,7 @@ def calculateRGB(temperature):
     pm4 = now.replace(hour=16, minute=0, second=0, microsecond=0)
     pm10 = now.replace(hour=22, minute=0, second=0, microsecond=0)
 
-    #Lights
+    # Lights
     directSunlight = [255, 255, 255]
     highNoonSun = [255, 255, 251]
     halogen = [255, 241, 224]
@@ -36,10 +36,15 @@ def calculateRGB(temperature):
         elif pm7 <= now < pm10:
             color = candle
 
+    if illuminance >= 2000:
+        color = noLight
+    elif illuminance < 1000 and (am11 <= now < pm4):
+        color = directSunlight
+
     return color
 
 
-def calculateBlindsPosition(temperature):
+def calculateBlindsPosition(temperature, cloudness , illuminance):
     manual = False
 
     now = datetime.now()
@@ -56,40 +61,45 @@ def calculateBlindsPosition(temperature):
         if am9 <= now < am11:
             position = 0
         elif am11 <= now < pm4:
-            position = 25
+            position = 25 - int(cloudness/4)
         elif pm4 <= now < pm7:
             position = 0
         elif pm7 <= now < pm10:
             position = 50
     else:
         if am9 <= now < am11:
-            position = 25
+            position = 25 - int((100-cloudness)/4)
         elif am11 <= now < pm4:
             position = 0
         elif pm4 <= now < pm7:
             position = 75
 
+    if position < 50 and cloudness > 70:
+        position = 50
+
+    if illuminance > 2000:
+        position = position + 20
+
     result = [int(manual), position, 0]
     return result
 
 
-def commandNumeric(deviceID,group,temperature):
-    identifier = Identifier(True,group,deviceID)
+def commandNumeric(deviceID, group, temperature, cloudness=0, illuminance=1500):
+    identifier = Identifier(True, group, deviceID)
     result = [identifier.numericView()]
     if group == Group.BLINDS:
-        result.extend(calculateBlindsPosition(temperature))
+        result.extend(calculateBlindsPosition(temperature, cloudness, illuminance))
     if group == Group.RGB_LAMPS:
-        result.extend(calculateRGB(temperature))
+        result.extend(calculateRGB(temperature, illuminance))
     return result
 
 
-def commandBytes(deviceID, group, temperature):
+def commandBytes(deviceID, group, temperature, cloudness=0, illuminance=1500):
     identifier = Identifier(True, group, deviceID)
     result = 0
     if group == Group.BLINDS:
-        result = pack('>HBBB', identifier.numericView(), *calculateBlindsPosition(temperature))
+        result = pack('>HBBB', identifier.numericView(), *calculateBlindsPosition(temperature, cloudness, illuminance))
     if group == Group.RGB_LAMPS:
-        result = pack('>HBBB', identifier.numericView(), *calculateRGB(temperature))
+        result = pack('>HBBB', identifier.numericView(), *calculateRGB(temperature, illuminance))
     return result
-
 
