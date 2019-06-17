@@ -15,7 +15,7 @@ def getLastCurrentData(conn):
     cur.execute("SELECT * FROM IoT_Serwer_currentstatedata ORDER BY id DESC LIMIT 1")
     rows = cur.fetchone()
 
-    return CurrentData(rows[1], rows[2], rows[3], rows[4], rows[5], rows[6])
+    return CurrentData(rows[1], rows[2], rows[3], rows[4], rows[5], rows[6],rows[7], rows[8])
 
 #def getLastSensor(conn,group: Group):
 
@@ -24,11 +24,6 @@ def getLastCurrentData(conn):
 # TODO: ErrorLOG
 
 
-# database = 'H:\\PycharmProjects\\Projekt_Zespolowy\\db.sqlite3'
-# conn = create_connection(database)
-# with conn:
-#     a = getLastSensor()
-#     print(a)
 
 
 

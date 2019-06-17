@@ -24,6 +24,8 @@ def calculateRGB(temperature, illuminance):
     if temperature > 14:
         if am9 <= now < am11:
             color = warmWhite
+        if pm4 <= now < pm7:
+            color = halogen
         elif pm7 <= now < pm10:
             color = candle
     else:
@@ -45,7 +47,7 @@ def calculateRGB(temperature, illuminance):
 
 
 def calculateBlindsPosition(temperature, cloudness , illuminance):
-    manual = False
+    manual = True
 
     now = datetime.now()
     am11 = now.replace(hour=11, minute=0, second=0, microsecond=0)
@@ -56,29 +58,38 @@ def calculateBlindsPosition(temperature, cloudness , illuminance):
 
     position = 100
     # 100 to w pelni zasloniete
+    illuminanceBoost = 0
+    if int(illuminance/1500) == 0:
+        illuminanceBoost = 25 - int(illuminance/100)
 
-    if temperature > 14:
+    if temperature > 18:
         if am9 <= now < am11:
             position = 0
         elif am11 <= now < pm4:
-            position = 25 - int(cloudness/4)
+            position = 25 - int(cloudness/4) - illuminanceBoost
         elif pm4 <= now < pm7:
-            position = 0
+            position = 50 - int(cloudness/4) - illuminanceBoost
         elif pm7 <= now < pm10:
             position = 50
     else:
         if am9 <= now < am11:
             position = 25 - int((100-cloudness)/4)
         elif am11 <= now < pm4:
-            position = 0
+            position = 15 - illuminanceBoost
         elif pm4 <= now < pm7:
             position = 75
+
+    if position < 0:
+        position = 0
 
     if position < 50 and cloudness > 70:
         position = 50
 
     if illuminance > 2000:
-        position = (position + 20) % 100
+        position = position + 20
+
+    if position > 100:
+        position = 100
 
     result = [int(manual), position, 0]
     return result
@@ -103,3 +114,8 @@ def commandBytes(deviceID, group, temperature, cloudness=0, illuminance=1500):
         result = pack('>HBBB', identifier.numericView(), *calculateRGB(temperature, illuminance))
     return result
 
+
+def withoutID(temperature, cloudness=0, illuminance=1500):
+    blind =calculateBlindsPosition(temperature, cloudness, illuminance)
+    result = struct.pack('BBBBB', blind[0], blind[1], *calculateRGB(temperature, illuminance))
+    return result

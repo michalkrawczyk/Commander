@@ -1,5 +1,5 @@
 class CurrentData:
-    def __init__(self, red, green, blue, temperature, shutterPosition, manualControl):
+    def __init__(self, temperature, cloudiness, date, red, green, blue,  shutterPosition, manualControl):
         self.manualControl = manualControl
         self.shutterPosition = shutterPosition
         self.temperature = temperature
@@ -11,3 +11,4 @@ class CurrentData:
         return "RGB:("+str(self.red)+","+str(self.blue)+","+str(self.green)+")"
 
 # Todo: Sensor , ErrorData, ?DEVICE?
+

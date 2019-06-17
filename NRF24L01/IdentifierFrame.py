@@ -1,5 +1,5 @@
 from enum import IntEnum
-
+import struct
 
 def getBit(value: int, index: int):
     digit = (value & (1 << index)) >> index
